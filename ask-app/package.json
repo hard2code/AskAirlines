@@ -1,0 +1,17 @@
+{
+  "name": "ask-app",
+  "version": "1.0.0",
+  "description": "airline ask blockchain app",
+  "main": "index.js",
+  "scripts": {
+    "dev": "lite-server",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "abd",
+  "license": "ISC",
+  "dependencies": {
+    "lite-server": "^2.4.0",
+    "node": "^12.0.0",
+    "nodemailer": "^6.1.1"
+  }
+}

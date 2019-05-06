@@ -1,0 +1,14 @@
+[
+  {
+    "id": 0,
+    "name": "A",
+    "picture": "images/Airline_A.jpeg",
+    "seats" : [1,2]
+  },
+  {
+    "id": 1,
+    "name": "B",
+    "picture": "images/Airline_B.png",
+    "seats" : [3,4]
+  }
+]
