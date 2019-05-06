@@ -4,6 +4,7 @@ App = {
   names: new Array(),
   url: 'http://127.0.0.1:8545',
   owner:null,
+  seat:null,
   currentAccount:null,
   init: function() {
     $.getJSON('../airlines.json', function(data) {
@@ -76,10 +77,7 @@ App = {
         }
       });*/
 
-    $(document).on('change', '#enter_seat_num', function(){
-      var seat = $('#enter_seat_num').val();
-        App.changeSeat(seat);
-    });
+    $(document).on('change', '#enter_seat_num', App.changeSeat);
 
     web3.eth.getAccounts(function(error, accounts) {
       var account = accounts[0];
@@ -180,30 +178,26 @@ App = {
     })
   },
 
-  changeSeat: function(seat){
-    $(document).on('click', '.btn-change', function(){
-      var airplane =  $('#proposalTemplate').find('.btn-change').attr('data-id');
-      console.log(airplane);
-      App.handleChange(seat,airplane);
-    });
-  },
-  handleChange: function(seat,plane){
+  changeSeat: function(event){
+    event.preventDefault();
+    var seatNum = parseInt($(event.target).val());
+    App.seat = seatNum;
+    $(document).on('click', '.btn-change', App.handleChange);
 
-    console.log("Seat number is " + seat+ " on airline " + plane );
+  },
+  handleChange: function(event){
+    event.preventDefault();
+    var airlineNum = parseInt($(event.target).data('id'));
+    console.log("Seat number is " + App.seat + " on airline " + airlineNum );
     var AirlineInstance;
-    var toAirline;
+
+
+    new Web3(new Web3.providers.HttpProvider(App.url)).eth.getAccounts((err, accounts) => {
+      var toAirline = accounts[airlineNum];
       App.contracts.vote.deployed().then(function(instance){
         AirlineInstance = instance;
-
-        new Web3(new Web3.providers.HttpProvider(App.url)).eth.getAccounts((error, accounts) =>{
-
-
-          toAirline = accounts[plane];
-          return AirlineInstance.request(toAirline,parseInt(seat), {from: web3.eth.coinbase});
-        })
-
-
-      }).then(function(result,err){
+          return AirlineInstance.request(toAirline,App.seat, {from: web3.eth.coinbase});
+        }).then(function(result,err){
         if(result){
               //console.log(result.receipt.status);
               if(parseInt(result.receipt.status) == 1){
@@ -217,6 +211,8 @@ App = {
           }
       });
 
+
+    });
 
   },
   handleEvents : function(){
